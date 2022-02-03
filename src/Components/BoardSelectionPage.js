@@ -1,210 +1,201 @@
-
 import { Button, Card, Select , Typography } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
-import useStateRef from "react-usestateref";
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import useState from "react-usestateref";
+import React from "react";
 import axios from "axios";
-import Helpers from "../Helpers";
+import { useNavigate } from "react-router-dom";
 
 function BoardSelection() {
-  const [boardvalue, setboardvalue, ref] = useStateRef("");
-  const [mediumvalue, setmediumvalue, refmedium] = useStateRef("");
-  const [classvalue, setclassvalue, refclass] = useStateRef("");
-
   const navigate = useNavigate()
-  const location = useLocation()
+  const [boardvalue, setboardvalue, ref] = useState("");
 
-  const [data, setData , dataRef] = useStateRef(
-    {
-      "allBoard": [
-        "State Board",
-        "CBSE",
-        "ICNERT"
+  const [mediumvalue, setmediumvalue, refmedium] = useState("");
+
+  const [classvalue, setclassvalue, refclass] = useState("");
+
+  const data = {
+    board: ["State Board", "CBSE", "NCERT"],
+
+    medium: ["Tamil Medium", "English Medium"],
+
+    class: [
+      "1th",
+      "2th",
+      "3th",
+      "4th",
+      "5th",
+      "6th",
+      "4th",
+      "5th",
+      "6th",
+      "7th",
+      "8th",
+      "9th",
+      "10th",
+      "11th",
+      "12th",
     ],
-    "allClass": [
-        "class1th",
-        "class2th",
-        "class3th",
-        "class4th",
-        "class5th",
-        "class6th",
-        "class4th",
-        "class5th",
-        "class6th",
-        "class7th",
-        "class8th",
-        "class9th",
-        "class10th",
-        "class11th",
-        "class12th"
-    ],
-    "allMedium": [
-        "Tamil Medium",
-        "English Medium"
-    ]
-    }
-  );
-
-  /*
-  {
-      "allBoard": [
-          "State Board",
-          "CBSE",
-          "ICNERT"
-      ],
-      "allClass": [
-          "class1th",
-          "class2th",
-          "class3th",
-          "class4th",
-          "class5th",
-          "class6th",
-          "class4th",
-          "class5th",
-          "class6th",
-          "class7th",
-          "class8th",
-          "class9th",
-          "class10th",
-          "class11th",
-          "class12th"
-      ],
-      "allMedium": [
-          "Tamil Medium",
-          "English Medium"
-      ]
-  }
-  */  
-
+  };
+  
   const handleSend = () => {
     let data = {
       board: ref.current,
       medium: refmedium.current,
-      class: refclass.current,
+      class: "class"+refclass.current,
     };
 
-    navigate('/subjectpage' , {state : data})
-      
+
+    if(data.medium === ''){
+      let filledData = {
+        board: ref.current,
+        medium: 'English Medium',
+        class: "class"+refclass.current,
+      };
+      navigate('/subjectpage' , {state : filledData})
+    }else{
+      navigate('/subjectpage' , {state : data})
+    }
+
+    // let data = {
+    //   board: ref.current,
+    //   medium: refmedium.current,
+    //   class: refclass.current,
+    // };
+
+   
+
   };
+
   const handleChange = (e) => {
     setboardvalue(e.target.value);
+    setmediumvalue("");
+    setclassvalue("");
+   
   };
+
+ 
+
   const handleChangeMedium = (e) => {
     setmediumvalue(e.target.value);
   };
+
   const handleChangeClass = (e) => {
     setclassvalue(e.target.value);
-  };
+    };
 
-  const loadData = async () => {
-    let prevData = location.state
-    let result;
-    await axios.post(Helpers().api + '/board_selection' , prevData).then(res => {
-       result =  res.data
-      console.log(result['message']);
-   
-    })
-    // setData(result['message'])
-  }
-
-  useEffect(() => {
-    // loadData()
-  }, []);
-  
-  return (
-    <>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          backgroundColor: "#D6E5FA",
-        }}
-      >
-       <Card
+    return (
+      <>
+        <div
           style={{
-            width: 500,
-            height: 500,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-evenly",
-            paddingLeft: "50px",
-            paddingRight: "50px",
-            border: "2px solid #1ea5fc",
-            borderRadius: "20px",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            backgroundColor: "#D6E5FA",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Typography style={{ flex: 1, fontWeight: "bold" }}>
-              Board
-            </Typography>
-            <Select style={{ flex: 2 }} onChange={handleChange}>
-              {dataRef.current.allBoard.map((text, index) => (
-                <MenuItem value={text}>{text}</MenuItem>
-              ))}
-            </Select>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Typography style={{ flex: 1, fontWeight: "bold" }}>
-              Medium
-            </Typography>
-            <Select style={{ flex: 2 }} onChange={handleChangeMedium}>
-              {dataRef.current.allMedium.map((text, index) => (
-                <MenuItem value={text}>{text}</MenuItem>
-              ))}
-            </Select>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Typography style={{ flex: 1, fontWeight: "bold" }}>
-              Class
-            </Typography>
-            <Select style={{ flex: 2 }} onChange={handleChangeClass}>
-              {dataRef.current.allClass.map((text, index) => (
-                <MenuItem value={text}>{text}</MenuItem>
-              ))}
-            </Select>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-            }}
-          >
-            <Button
-              variant="contained"
-              style={{ width: 100 }}
-              onClick={() => handleSend()}
+          <Card style={{display:'flex',flexDirection:'column',justifyContent:'space-evenly',width:500,height:500,padding:20,border:'1px solid #1ea5fc',borderRadius:20}}  >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
             >
-              Next
-            </Button>
-          </div>
-        </Card>    
-
-
-      </div>
-    </>
-  );
-}
+              <Typography style={{ flex: 1, fontWeight: "bold" }}>
+                Board
+              </Typography>
+  
+              <Select
+                style={{ flex: 2 }}
+                value={boardvalue}
+                onChange={handleChange}
+              >
+                {data.board.map((text, index) => (
+                  <MenuItem value={text}>{text}</MenuItem>
+                ))}
+              </Select>
+            </div>
+            <div
+              style={{
+                display:
+                  ref.current === "CBSE" || ref.current === "NCERT" ? "none" : "",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Typography style={{ flex: 1, fontWeight: "bold" }}>
+                  Medium
+                </Typography>
+                <Select
+                  disabled={ref.current === "State Board" ? false : true}
+                  style={{ flex: 2 }}
+                  value={mediumvalue}
+                  onChange={handleChangeMedium}
+                >
+                  {data.medium.map((text, index) => (
+                    <MenuItem value={ref.current === "State Board" ? text : ""}>
+                      {" "}
+                      {text}{" "}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </div>
+            </div>
+  
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Typography style={{ flex: 1, fontWeight: "bold" }}>
+                Class
+              </Typography>
+              <Select
+                value={classvalue}
+                disabled={
+                  ref.current === "State Board" ||
+                  ref.current === "CBSE" ||
+                  ref.current === "NCERT"
+                    ? false
+                    : true
+                }
+                style={{ flex: 2 }}
+                onChange={handleChangeClass}
+              >
+                {data.class.map((text, index) => (
+                  <MenuItem value={text}>{text}</MenuItem>
+                ))}
+              </Select>
+            </div>
+  
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                variant="contained"
+                style={{ width: 100 }}
+                onClick={() => handleSend()}
+              >
+                Next
+              </Button>
+            </div>
+            
+          </Card>
+        </div>
+      </>
+    );
+  }
 export default BoardSelection;

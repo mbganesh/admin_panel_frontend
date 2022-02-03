@@ -161,8 +161,8 @@ export default function VideoPage() {
   }
 
   useEffect(() => {
-    console.log(location.state);
-    setSubName(location.state.subName);
+    // console.log(location.state);
+    // setSubName(location.state.subName);
   }, []);
 
   return (

@@ -19,7 +19,9 @@ import {
   tableCellClasses ,
   Toolbar,
   Typography,
+  IconButton,
 } from "@mui/material";
+import NextIcon from "@mui/icons-material/ArrowForward";
 import React, { useEffect, useState } from "react";
 import Helpers from "../Helpers";
 import { styled } from '@mui/material/styles';
@@ -152,13 +154,12 @@ const handleAddUnit = () => {
     setUnitList([...unitList, unitDetails]);
     setOpen(!open);
 
-
     let obj = {
       className:prevRef.current['className'],
       mediumName:prevRef.current['mediumName'],
       subjectName:prevRef.current['subjectName'],
       boardName:prevRef.current['boardName'],
-      collectionName:colNameRef.current,
+      collectionName:colNameRef.current+prevRef.current['subjectName'],
       unitName:unitDetails
     }
 
@@ -167,8 +168,6 @@ const handleAddUnit = () => {
       let result = res.data
       console.log(result);
     })
-
-    console.log(obj);
 
   } else {
     alert("Fields Cannot Be Empty");
@@ -206,23 +205,28 @@ const getBoardName = (key) => {
   return BOARD.length < 2 ? BOARD + "B" : BOARD;
 };
 
+const handleView = (name) => {
+
+  navigate("/topicpage", {
+    state: {
+      boardName:prevRef.current['boardName'],
+      className:prevRef.current['className'],
+      mediumName:prevRef.current['mediumName'],
+      collectionName:colNameRef.current+ prevRef.current['subjectName'],
+      unitName:name,
+    },
+  });
+};
 
 const getUnitList = () => {
-
-  console.log('**************');
-  console.log("colNameRef.current - unit page");
-  console.log(colNameRef.current);
-  console.log('**************');
 
   let obj = {
     className:prevRef.current['className'],
     mediumName:prevRef.current['mediumName'],
     subjectName:prevRef.current['subjectName'],
     boardName:prevRef.current['boardName'],
-    collectionName:colNameRef.current,
+    collectionName:colNameRef.current+ prevRef.current['subjectName'],
   }
-
-console.log(obj);
 
   axios.post(Helpers().api + '/list_unit_api' , obj).then(res => {
     let result = res.data
@@ -233,20 +237,12 @@ console.log(obj);
 
 useEffect(() => {
   var data = location.state
-
-  console.log('***********');
-  console.log(data);
-  console.log('***********');
-
-
   setPrevData(data)
 
   let prevClassName = prevRef.current['className']
   setCollectionName(getBoardName('boardName') + getBoardName('mediumName') + prevClassName.charAt(0).toUpperCase()+prevClassName.slice(1))
   
-
   getUnitList()
-
 
 }, []);
 
@@ -326,6 +322,43 @@ return (
                     </StyledTableCell>
 
                     <StyledTableCell
+                        align="center"
+                        className={classes.tableContentSize}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Card
+                            elevation="3"
+                            style={{ display: "flex", padding: "0.5%" }}
+                          >
+                            <IconButton onClick={() => handleView(row)}>
+                              <NextIcon />
+                            </IconButton>
+
+                            <Divider orientation="vertical" flexItem />
+                            <Button
+                              startIcon={<DeleteIcon />}
+                              variant="contained"
+                              style={{
+                                backgroundColor: "red",
+                                color: "white",
+                                marginLeft: "5px",
+                                marginRight: "5px",
+                              }}
+                              onClick={() => handleDelete(row)}
+                            >
+                              Delete
+                            </Button>
+                          </Card>
+                        </div>
+                      </StyledTableCell>
+
+                    {/* <StyledTableCell
                       align="center"
                          className={classes.tableContentSize}
                     >
@@ -397,7 +430,8 @@ return (
                           </Button>
                         </Card>
                       </div>
-                    </StyledTableCell>
+                    </StyledTableCell> */}
+
                   </StyledTableRow>
                 ))}
                 {emptyRows > 0 && (

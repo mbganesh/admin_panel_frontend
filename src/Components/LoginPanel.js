@@ -54,12 +54,13 @@ export default function LoginPanel() {
         }}
       >
         ​
-        <Card style={{ width: "400px", height: "450px" }}>
+        <Card style={{ width: "40%", height: "70%" }}>
           <div
             style={{
               display: "flex",
               justifyContent: "center",
-              marginTop: "13%",
+              marginTop: "5%",
+              // padding:'5%'
             }}
           >
             <Typography

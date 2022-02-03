@@ -1,6 +1,9 @@
 import {
   AppBar,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Paper,
   Card,
   Divider,
@@ -12,24 +15,23 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TextField,
   tableCellClasses,
   Toolbar,
   Typography,
   IconButton,
-  Dialog,
-  TextField,
-  DialogContent,
-  DialogTitle,
 } from "@mui/material";
+import NextIcon from "@mui/icons-material/ArrowForward";
 import React, { useEffect, useState } from "react";
 import Helpers from "../Helpers";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
-import NextIcon from "@mui/icons-material/ArrowForward";
+import VideoIcon from "@mui/icons-material/VideoLibrary";
+import MarkIcon from "@mui/icons-material/QuestionAnswer";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import useStateRef from "react-usestateref";
+import axios from "axios";
 
 const useStyles = makeStyles({
   appBarField: {
@@ -95,58 +97,21 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function SubjectPage() {
+export default function TopicPage() {
   const classes = useStyles();
   const navigate = useNavigate();
-
   const location = useLocation();
 
-  const [subjectList, setSubjectList] = useState([]);
-  const [subjectName, setSubjectName] = useState("");
-
-  const [myList, setMyList, myListRef] = useStateRef([]);
-
   const [prevData, setPrevData, prevRef] = useStateRef({});
+  const [collectionName, setCollectionName, colNameRef] = useStateRef("");
 
-  const [boarName, setBoardName, boardNameRef] = useStateRef("");
-
-  const [open, setOpen] = useState(false);
-
-  const handleAddSubjectDialog = () => {
-    setOpen(!open);
-    setSubjectName("");
-  };
-
-  const handleSubName = (e) => {
-    let name = e.target.value;
-    setSubjectName(name);
-  };
-
-  const handleAddSubject = () => {
-    if (subjectName !== "") {
-      setSubjectList([...subjectList, subjectName]);
-      setOpen(!open);
-
-      let TempObj = {
-        subDetails: prevRef.current,
-        subName: subjectName,
-      };
-
-      console.log(TempObj);
-
-      axios.post(Helpers().api + "/subject_api", TempObj).then((res) => {
-        console.log(res.data);
-        getSubList();
-      });
-    } else {
-      alert("Please Enter Subject Name");
-    }
-  };
+  const [topicList, setTopicList] = useState([]);
+  const [topicDetails, setTopicDetails] = useState("");
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, myList.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, topicList.length - page * rowsPerPage);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -156,90 +121,108 @@ export default function SubjectPage() {
     setPage(0);
   };
 
-  const handleView = (name) => {
+  const [open, setOpen] = useState(false);
 
-    navigate("/unitpage", {
-      // board: 'State Board', medium: 'English Medium', class: 'class1th'
-      state: {
-        boardName: prevRef.current.board,
-        className: prevRef.current.class,
-        mediumName: prevRef.current.medium,
-        subjectName:name
-      },
-    });
+  const handleAddTopicDialog = () => {
+    setOpen(!open);
+    setTopicDetails("");
+  };
+
+  const handleAddTopic = () => {
+
+
+
+    if (topicDetails !== "") {
+        prevRef.current['topicName'] = topicDetails
+        axios.post(Helpers().api + '/list_edit_api' , prevRef.current).then(re => {
+            let res = re.data
+            console.log(res);
+        })
+
+      setTopicList([...topicList, topicDetails]);
+      setOpen(!open);
+    } else {
+      alert("Field cannot be empty");
+    }
+  };
+
+  const handleTopicName = (e) => {
+    let text = e.target.value;
+    setTopicDetails(text);
+  };
+
+  const handleVideo = (name) => {
+    navigate("/videos"); //{ state : {subName : name} }
+    // alert('not yet developed')
+  };
+
+  const handleOneMark = (name) => {
+    // navigate('/onemarks' , { state : {subName : name} })
+    alert("not yet developed");
+  };
+
+  const handleTwoMark = (name) => {
+    // navigate('/twomarks' , { state : {subName : name} })
+    alert("not yet developed");
+  };
+
+  const handleView = (name) => {
+    // navigate("/topicpage", {
+    //   // board: 'State Board', medium: 'English Medium', class: 'class1th'
+    //   state: {
+    //     boardName: prevData.board,
+    //     className: prevData.class,
+    //     mediumName: prevData.medium,
+    //     subjectName:name
+    //   },
+    // });
+
+    let obj = {
+      boardName: prevData.board,
+      className: prevData.class,
+      mediumName: prevData.medium,
+      subjectName: name,
+    };
+
+    console.log(obj);
   };
 
   const handleDelete = (name) => {
-    // const newList = myList.filter((oldData) => oldData !== name);
-
-    let TempObj = {
-      subDetails: prevRef.current,
-      subName: name,
-    };
-
-    axios.post(Helpers().api + "/subject_edit_api", TempObj).then((res) => {
-      let upData = res.data;
-      console.log(upData);
-      getSubList();
-    });
-  };
-
-  const handleSubjectPage = () => {
-    setOpen(!open);
-    setSubjectName("");
-  };
-
-  const getBoardName = (key) => {
-    let boardArr = prevRef.current[key].split(" ");
-    let b = boardArr.map((el) => el.charAt(0));
-    let BOARD = "";
-    for (let i = 0; i < b.length; i++) {
-      BOARD = BOARD.concat(b[i]);
-    }
-    return BOARD.length < 2 ? BOARD + "B" : BOARD;
-  };
-
-  const getSubList = () => {
-    let TempObj = {
-      subDetails: prevRef.current,
-      subName: "",
-    };
-
-    axios.post(Helpers().api + "/subject_list_api", TempObj).then((res) => {
-      let lsData = res.data;
-      console.log(lsData);
-      setMyList(res.data.mySubject);
-    });
+    const newList = topicList.filter((oldData) => oldData !== name);
+    setTopicList(newList);
   };
 
   useEffect(() => {
-    setPrevData(location.state);
-
-    let TempObj = {
-      subDetails: prevRef.current,
-      subName: "",
-    };
-    axios.post(Helpers().api + "/subject_api", TempObj).then((res) => {
-      console.log(res.data);
-    });
-
-    getSubList();
+    setPrevData(location.state)
+    console.log(prevRef.current);
   }, []);
+  
 
   return (
     <div>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.appBarField}>
-            Subject Page
+            Topic Page
           </Typography>
+
+          <Button
+            variant="outlined"
+            color="secondary"
+            style={{ color: "white", margin: "5px" }}
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            Back
+          </Button>
 
           <Button
             variant="contained"
             color="secondary"
-            onClick={() => handleSubjectPage()}
+            onClick={handleAddTopicDialog}
           >
-            Add Subject
+            Add Topic
           </Button>
         </Toolbar>
       </AppBar>
@@ -253,7 +236,7 @@ export default function SubjectPage() {
                   <StyledTableRow>
                     <StyledTableCell align="left">
                       <Typography className={classes.headFontSize}>
-                        Subject
+                        Topic Name
                       </Typography>
                     </StyledTableCell>
                     <StyledTableCell align="center">
@@ -266,11 +249,11 @@ export default function SubjectPage() {
 
                 <TableBody>
                   {(rowsPerPage > 0
-                    ? myList.slice(
+                    ? topicList.slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
-                    : myList
+                    : topicList
                   ).map((row) => (
                     <StyledTableRow>
                       <StyledTableCell>
@@ -294,10 +277,47 @@ export default function SubjectPage() {
                             elevation="3"
                             style={{ display: "flex", padding: "0.5%" }}
                           >
-                            <IconButton onClick={() => handleView(row)}>
-                              <NextIcon />
-                            </IconButton>
-
+                            <Button
+                              startIcon={<VideoIcon />}
+                              variant="contained"
+                              onClick={() => handleVideo(row)}
+                              style={{
+                                backgroundColor: "#041562",
+                                marginLeft: "5px",
+                                marginRight: "5px",
+                                color: "white",
+                              }}
+                            >
+                              Videos
+                            </Button>
+                            <Divider orientation="vertical" flexItem />
+                            <Button
+                              startIcon={<MarkIcon />}
+                              variant="contained"
+                              onClick={() => handleOneMark(row)}
+                              style={{
+                                backgroundColor: "#519259",
+                                marginLeft: "5px",
+                                marginRight: "5px",
+                                color: "white",
+                              }}
+                            >
+                              One Mark
+                            </Button>
+                            <Divider orientation="vertical" flexItem />
+                            <Button
+                              startIcon={<MarkIcon />}
+                              variant="contained"
+                              style={{
+                                backgroundColor: "#519259",
+                                color: "white",
+                                marginLeft: "5px",
+                                marginRight: "5px",
+                              }}
+                              onClick={() => handleTwoMark(row)}
+                            >
+                              Two Mark
+                            </Button>
                             <Divider orientation="vertical" flexItem />
                             <Button
                               startIcon={<DeleteIcon />}
@@ -315,7 +335,6 @@ export default function SubjectPage() {
                           </Card>
                         </div>
                       </StyledTableCell>
-                      
                     </StyledTableRow>
                   ))}
                   {emptyRows > 0 && (
@@ -338,7 +357,7 @@ export default function SubjectPage() {
                       { label: "All", value: -1 },
                     ]}
                     colSpan={3}
-                    count={myList.length}
+                    count={topicList.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     SelectProps={{
@@ -357,7 +376,7 @@ export default function SubjectPage() {
 
       <Dialog
         open={open}
-        onClose={handleAddSubjectDialog}
+        onClose={handleAddTopicDialog}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle
@@ -370,23 +389,34 @@ export default function SubjectPage() {
           }}
           id="form-dialog-title"
         >
-          Add Subject
+          Add Topic
         </DialogTitle>
 
         <DialogContent>
           <div className={classes.dialogBox}>
-            <Typography style={{ margin: "2%", fontSize: "20px" }}>
-              Subject Name
-            </Typography>
-            <TextField
-              type="text"
-              autoFocus
-              style={{ margin: "2%" }}
-              variant="outlined"
-              placeholder="Enter Subject Name"
-              value={subjectName}
-              onChange={handleSubName}
-            />
+            <div style={{ display: "flex" }}>
+              <Typography
+                style={{
+                  margin: "2%",
+                  fontSize: "20px",
+                  whiteSpace: "nowrap",
+                  textAlign: "center",
+                }}
+              >
+                Topic Name
+              </Typography>
+              <TextField
+                type="text"
+                autoFocus
+                fullWidth
+                style={{ margin: "2%" }}
+                variant="outlined"
+                placeholder="Enter Topic Name"
+                value={topicDetails}
+                onChange={handleTopicName}
+              />
+            </div>
+            
             <Button
               variant="contained"
               style={{
@@ -394,10 +424,10 @@ export default function SubjectPage() {
                 backgroundColor: Helpers().primaryColor,
                 margin: "2%",
               }}
-              onClick={handleAddSubject}
+              onClick={handleAddTopic}
               type="submit"
             >
-              Add and Save
+              Save
             </Button>
           </div>
         </DialogContent>
