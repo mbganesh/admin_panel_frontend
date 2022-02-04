@@ -109,10 +109,13 @@ export default function UnitPage() {
   const[myData , setMyData , myDataRef] = useStateRef({})
   const[myList , setMyList , myListRef] = useStateRef([])
 
-const [unitDetails, setUnitDetails] = useState(
+const [ unitDetails, setUnitDetails] = useState(
   {
     unitNo:'',
-    unitName:''
+    unitName:'',
+    videos:[],
+    oneMarks:[],
+    twoMarks:[]
   }
 );
   const [unitList, setUnitList] = useState([]);
@@ -207,11 +210,15 @@ const getBoardName = (key) => {
 
 const handleView = (name) => {
 
-  navigate("/topicpage", {
-    state: {
+  /*
       boardName:prevRef.current['boardName'],
       className:prevRef.current['className'],
       mediumName:prevRef.current['mediumName'],
+
+  */
+
+  navigate("/topicpage", {
+    state: {
       collectionName:colNameRef.current+ prevRef.current['subjectName'],
       unitName:name,
     },

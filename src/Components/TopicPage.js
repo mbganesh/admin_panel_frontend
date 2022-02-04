@@ -134,10 +134,7 @@ export default function TopicPage() {
 
     if (topicDetails !== "") {
         prevRef.current['topicName'] = topicDetails
-        axios.post(Helpers().api + '/list_edit_api' , prevRef.current).then(re => {
-            let res = re.data
-            console.log(res);
-        })
+       
 
       setTopicList([...topicList, topicDetails]);
       setOpen(!open);
@@ -157,13 +154,13 @@ export default function TopicPage() {
   };
 
   const handleOneMark = (name) => {
-    // navigate('/onemarks' , { state : {subName : name} })
-    alert("not yet developed");
+    navigate('/onemarks' , { state : {subName : name} })
+    // alert("not yet developed");
   };
 
   const handleTwoMark = (name) => {
-    // navigate('/twomarks' , { state : {subName : name} })
-    alert("not yet developed");
+    navigate('/twomarks' , { state : {subName : name} })
+    // alert("not yet developed");
   };
 
   const handleView = (name) => {
@@ -192,9 +189,21 @@ export default function TopicPage() {
     setTopicList(newList);
   };
 
+  const getTopicList = () => {
+    axios.post(Helpers().api + "/list_topic_api",prevRef.current).then(res => {
+      let data = res.data
+      console.log(data);
+    })
+  }
+
+
   useEffect(() => {
     setPrevData(location.state)
     console.log(prevRef.current);
+
+    getTopicList() 
+
+
   }, []);
   
 

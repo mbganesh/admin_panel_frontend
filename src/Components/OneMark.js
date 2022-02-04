@@ -175,8 +175,8 @@ export default function OneMark() {
 
   
   useEffect(() => {
-    console.log(location.state);
-    setSubName(location.state.subName);
+    // console.log(location.state);
+    // setSubName(location.state.subName);
   }, []);
 
 

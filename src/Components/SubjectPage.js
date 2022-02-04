@@ -26,7 +26,8 @@ import Helpers from "../Helpers";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
-import NextIcon from "@mui/icons-material/ArrowForward";
+import EditIcon from '@mui/icons-material/Edit';
+import ViewIcon from '@mui/icons-material/RemoveRedEye';
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import useStateRef from "react-usestateref";
@@ -56,7 +57,7 @@ const useStyles = makeStyles({
   tableContentSize: {
     marginLeft: "1%",
     fontSize: 14,
-    width: "48vw",
+    width: "30vw",
     // [theme.breakpoints.up("lg")]: {
     //   fontSize: 16,
     // },
@@ -228,7 +229,7 @@ export default function SubjectPage() {
 
   return (
     <div>
-      <AppBar position="static">
+      <AppBar position="sticky">
         <Toolbar>
           <Typography variant="h6" className={classes.appBarField}>
             Subject Page
@@ -294,11 +295,42 @@ export default function SubjectPage() {
                             elevation="3"
                             style={{ display: "flex", padding: "0.5%" }}
                           >
-                            <IconButton onClick={() => handleView(row)}>
-                              <NextIcon />
-                            </IconButton>
+                      
+                      <Button
+                              startIcon={<ViewIcon />}
+                              variant="contained"
+                              style={{
+                                backgroundColor: "green",
+                                color: "white",
+                                marginLeft: "5px",
+                                marginRight: "5px",
+                              }}
+                              onClick={() => handleView(row)}
+                            >
+                              View
+                            </Button>
+
 
                             <Divider orientation="vertical" flexItem />
+
+
+                            <Button
+                              startIcon={<EditIcon />}
+                              variant="contained"
+                              style={{
+                                backgroundColor: "orange",
+                                color: "white",
+                                marginLeft: "5px",
+                                marginRight: "5px",
+                              }}
+                              // onClick={() => handleDelete(row)}
+                            >
+                              Edit
+                            </Button>
+
+                            <Divider orientation="vertical" flexItem />
+
+
                             <Button
                               startIcon={<DeleteIcon />}
                               variant="contained"

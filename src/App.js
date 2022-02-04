@@ -9,6 +9,7 @@ import LoginPanel from "./Components/LoginPanel";
 import BoardSelection from "./Components/BoardSelectionPage";
 import UnitPage from "./Components/UnitPage";
 import TopicPage from "./Components/TopicPage";
+import DeleteNow from "./Components/DeleteNow";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
           <Route exact path="/videos" element={<VideoPage />} />
           <Route exact path="/onemarks" element={<OneMark />} />
           <Route exact path="/twomarks" element={<TwoMark />} />
+
+          <Route exact path="/test" element={<DeleteNow />} />
         </Routes>
       </BrowserRouter>
     </>

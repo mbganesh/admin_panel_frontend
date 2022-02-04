@@ -150,8 +150,8 @@ export default function TwoMark() {
 
 
     useEffect(() => {
-        console.log(location.state);
-        setSubName(location.state.subName);
+        // console.log(location.state);
+        // setSubName(location.state.subName);
       }, []);
 
 
