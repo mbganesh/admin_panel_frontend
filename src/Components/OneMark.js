@@ -174,27 +174,31 @@ export default function OneMark() {
     let obj = prevRef.current
     obj['unitOneMarks'] = oneMarkDetails
 
-
     console.log(obj);
 
     axios.post(Helpers().api + '/list_one_edit_mark_api' , obj).then(result => {
       let res = result.data
       console.log(res);
+      getList()
     })
 
     setOneMarkList([...oneMarkList, oneMarkDetails]);
     setOpen(!open);
   };
 
+  const getList = () => {
+    axios.post(Helpers().api + "/list_one_mark_api", prevRef.current).then((result) => {
+      let res = result.data.message;
+      console.log(res);
+      setOneMarkList(res)
+    });
+  }
+
   useEffect(() => {
     let obj = location.state;
     setPrevData(obj)
-      console.log(prevRef.current);
-
-    axios.post(Helpers().api + "/list_one_mark_api", obj).then((result) => {
-      let res = result.data;
-      console.log(res);
-    });
+      getList()
+    
   }, []);
 
   return (
