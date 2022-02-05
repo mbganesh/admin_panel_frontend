@@ -41,98 +41,131 @@ export default function LoginPanel() {
 
   const navigate = useNavigate();
   return (
-    <div
-      style={{ maxWidth: "100vw", height: "100vh", backgroundColor: "#9AD0EC" }}
-    >
+    <div>
+    <div class="header">
+      <div class="inner-header flex">
+        <h1>GilGal Admin Panel</h1>
+      </div>
 
-     <div
-        style={{
-          display: "flex",
-          height: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        ​
-        <Card style={{ width: "40%", height: "70%" }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "5%",
-              // padding:'5%'
-            }}
+      <div>
+        <div>
+          <svg
+            class="waves"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            viewBox="0 24 150 28"
+            preserveAspectRatio="none"
+            shape-rendering="auto"
           >
-            <Typography
-              style={{ fontWeight: "900", fontSize: 26, color: "#1C6DD0" }}
-            >
-              {" "}
-              GILGAL ADMIN PANEL{" "}
-            </Typography>
-          </div>
-          ​
-          <div
-            style={{
-              margin: "13% 6% 0% 6%",
-              display: "flex",
-              justifyContent: "space-around",
-              alignItems: "center",
-              width: "87%",
-              justifyContent: "space-around",
-            }}
-          >
-            <Typography style={{ fontWeight: "900", fontSize: 16 }}>
+            <defs>
+              <path
+                id="gentle-wave"
+                d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"
+              />
+            </defs>
+            <g class="parallax">
+              <use
+                xlinkHref="#gentle-wave"
+                x="48"
+                y="0"
+                fill="rgba(255,255,255,0.7"
+              />
+              <use
+                xlinkHref="#gentle-wave"
+                x="48"
+                y="3"
+                fill="rgba(255,255,255,0.5)"
+              />
+              <use
+                xlinkHref="#gentle-wave"
+                x="48"
+                y="5"
+                fill="rgba(255,255,255,0.3)"
+              />
+              <use xlinkHref="#gentle-wave" x="48" y="7" fill="#fff" />
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="content flex">
+      <div>
+        <Card
+          elevation={10}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            padding:'20px',
+            marginTop:'50%'
+          }}
+        >
+          <div style={{
+            width:'30vw',
+            display:'flex',
+            justifyContent:'center',
+            alignItems:'center',
+            margin:'25px'
+          }}>
+            <Typography style={{margin:'10px', fontWeight: "900", fontSize: 16 }}>
               Username
             </Typography>
-            <TextField id="outlined-basic" size="small" variant="filled" value={loginData.userName} onChange={(e) => handleUserName(e)} />
+            <TextField
+              id="outlined-basic"
+              size="small"
+              variant="filled"
+              fullWidth
+              value={loginData.userName}
+              onChange={(e) => handleUserName(e)}
+            />
           </div>
-          ​
-          <div
-            style={{
-              margin: "13% 6% 0% 6%",
-              display: "flex",
-              justifyContent: "space-around",
-              alignItems: "center",
-              width: "87%",
-              justifyContent: "space-around",
-            }}
-          >
-            <Typography style={{ fontWeight: "900", fontSize: 16 }}>
+
+          <div style={{
+            width:'30vw',
+            display:'flex',
+            justifyContent:'center',
+            alignItems:'center',
+            margin:'25px'
+            
+          }}>
+            <Typography style={{margin:'10px', fontWeight: "900", fontSize: 16 }}>
               Password
             </Typography>
             <TextField
               id="outlined-basic"
               size="small"
               type="password"
+              fullWidth
               variant="filled"
-              value={loginData.passWord} onChange={(e) => handlePassWord(e)} />
+              value={loginData.passWord}
+              onChange={(e) => handlePassWord(e)}
+            />
           </div>
-          ​
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "13%",
-            }}
-          >
+
+          <div style={{
+            width:'30vw',
+            display:'flex',
+            justifyContent:'center',
+            alignItems:'center',
+            margin:'25px'
+          }}>
             <Button
               style={{
-                width: "320px",
+                width: "100%",
                 backgroundColor: "#1C6DD0",
                 height: "45px",
                 color: "white",
                 fontWeight: "900",
                 fontSize: 18,
               }}
-            onClick={() => handleLoginBtn()}
+              onClick={() => handleLoginBtn()}
             >
               Login
             </Button>
           </div>
-          ​
         </Card>
-        ​
       </div>
     </div>
+  </div>
   );
 }

@@ -19,15 +19,13 @@ import {
   tableCellClasses ,
   Toolbar,
   Typography,
-  IconButton,
 } from "@mui/material";
-import NextIcon from "@mui/icons-material/ArrowForward";
 import React, { useEffect, useState } from "react";
 import Helpers from "../Helpers";
 import { styled } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles'
 import DeleteIcon from '@mui/icons-material/Delete';
-import VideoIcon from '@mui/icons-material/VideoLibrary';
+import ViewIcon from '@mui/icons-material/Visibility';
 import MarkIcon from '@mui/icons-material/QuestionAnswer';
 import { useLocation, useNavigate } from "react-router-dom";
 import useStateRef from "react-usestateref";
@@ -177,14 +175,23 @@ const handleAddUnit = () => {
   }
 };
 
-const handleVideo = (name) => {
-    // navigate('/videos' , { state : {subName : name} })
-    alert('not yet developed')
-}
 
 const handleOneMark = (name) => {
-  // navigate('/onemarks' , { state : {subName : name} })
-  alert('not yet developed')
+   
+
+  let ob = {
+    collectionName:colNameRef.current+ prevRef.current['subjectName'],
+    unitDetails:{
+      unitName:name.unitName,
+      unitNo:name.unitNo
+    },
+  }
+
+  console.log(ob);
+
+
+  navigate('/onemarks' , { state :ob })
+  // alert('not yet developed')
 }
 
 const handleTwoMark = (name) => {
@@ -216,6 +223,8 @@ const handleView = (name) => {
       mediumName:prevRef.current['mediumName'],
 
   */
+
+   
 
   navigate("/topicpage", {
     state: {
@@ -327,7 +336,7 @@ return (
                          {row.unitNo} {row.unitName}
                       </Typography>
                     </StyledTableCell>
-
+   {/*
                     <StyledTableCell
                         align="center"
                         className={classes.tableContentSize}
@@ -364,8 +373,8 @@ return (
                           </Card>
                         </div>
                       </StyledTableCell>
-
-                    {/* <StyledTableCell
+                    */}
+                  <StyledTableCell
                       align="center"
                          className={classes.tableContentSize}
                     >
@@ -381,9 +390,9 @@ return (
                           style={{ display: "flex", padding: "0.5%" }}
                         >
                           <Button
-                            startIcon={<VideoIcon />}
+                            startIcon={<ViewIcon />}
                             variant="contained"
-                            onClick={() => handleVideo(row)}
+                            onClick={() =>handleView(row)}
                             style={{
                               backgroundColor: "#041562",
                               marginLeft: "5px",
@@ -391,7 +400,7 @@ return (
                               color: "white",
                             }}
                           >
-                            Videos
+                            View
                           </Button>
                           <Divider orientation="vertical" flexItem />
                           <Button
@@ -437,7 +446,7 @@ return (
                           </Button>
                         </Card>
                       </div>
-                    </StyledTableCell> */}
+                    </StyledTableCell> 
 
                   </StyledTableRow>
                 ))}

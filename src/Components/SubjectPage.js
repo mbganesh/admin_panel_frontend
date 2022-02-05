@@ -236,6 +236,15 @@ export default function SubjectPage() {
           </Typography>
 
           <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => {navigate(-1)}}
+            style={{ color:'white', marginRight:'20px'}}
+          >
+           Change Class
+          </Button>
+
+          <Button
             variant="contained"
             color="secondary"
             onClick={() => handleSubjectPage()}

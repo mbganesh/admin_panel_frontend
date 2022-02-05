@@ -19,14 +19,14 @@ import {
   tableCellClasses,
   Toolbar,
   Typography,
-  IconButton,
 } from "@mui/material";
-import NextIcon from "@mui/icons-material/ArrowForward";
+import ViewIcon from '@mui/icons-material/RemoveRedEye';
 import React, { useEffect, useState } from "react";
 import Helpers from "../Helpers";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from '@mui/icons-material/Edit';
 import VideoIcon from "@mui/icons-material/VideoLibrary";
 import MarkIcon from "@mui/icons-material/QuestionAnswer";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -105,8 +105,11 @@ export default function TopicPage() {
   const [prevData, setPrevData, prevRef] = useStateRef({});
   const [collectionName, setCollectionName, colNameRef] = useStateRef("");
 
-  const [topicList, setTopicList] = useState([]);
-  const [topicDetails, setTopicDetails] = useState("");
+  const [topicList, setTopicList , topicListRef] = useStateRef([]);
+  const [topicDetails, setTopicDetails] = useState({
+    topicName:'',
+    topicUrl:''
+  });
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
@@ -130,11 +133,27 @@ export default function TopicPage() {
 
   const handleAddTopic = () => {
 
-
+   
 
     if (topicDetails !== "") {
-        prevRef.current['topicName'] = topicDetails
-       
+        // prevRef.current['topicName'] = topicDetails
+
+        let obj = {
+          collectionName:prevRef.current.collectionName,
+          unitDetail:{
+            unitName:prevRef.current.unitName.unitName,
+            unitNo:prevRef.current.unitName.unitNo,
+          },
+          topicDetails:topicDetails
+        }
+    
+        console.log(obj);
+    
+        axios.post(Helpers().api + '/list_topic_edit_api' , obj ).then(result => {
+          let res = result.data
+          console.log(res);
+          getTopicList() 
+        })
 
       setTopicList([...topicList, topicDetails]);
       setOpen(!open);
@@ -145,43 +164,42 @@ export default function TopicPage() {
 
   const handleTopicName = (e) => {
     let text = e.target.value;
-    setTopicDetails(text);
+    setTopicDetails({...topicDetails , topicName:text})
   };
 
-  const handleVideo = (name) => {
-    navigate("/videos"); //{ state : {subName : name} }
-    // alert('not yet developed')
+  const handleTopicUrl = (e) => {
+    let text = e.target.value;
+    setTopicDetails({...topicDetails , topicUrl:text})
   };
 
-  const handleOneMark = (name) => {
-    navigate('/onemarks' , { state : {subName : name} })
-    // alert("not yet developed");
-  };
+  const handleView = (row) => {
 
-  const handleTwoMark = (name) => {
-    navigate('/twomarks' , { state : {subName : name} })
-    // alert("not yet developed");
-  };
+    setTopicDetails({
+      topicName:row.topicName,
+      topicUrl:row.topicUrl
+    })
 
-  const handleView = (name) => {
-    // navigate("/topicpage", {
-    //   // board: 'State Board', medium: 'English Medium', class: 'class1th'
-    //   state: {
-    //     boardName: prevData.board,
-    //     className: prevData.class,
-    //     mediumName: prevData.medium,
-    //     subjectName:name
-    //   },
-    // });
+    setOpen(!open)
 
-    let obj = {
-      boardName: prevData.board,
-      className: prevData.class,
-      mediumName: prevData.medium,
-      subjectName: name,
-    };
+    // // navigate("/topicpage", {
+    // //   // board: 'State Board', medium: 'English Medium', class: 'class1th'
+    // //   state: {
+    // //     boardName: prevData.board,
+    // //     className: prevData.class,
+    // //     mediumName: prevData.medium,
+    // //     subjectName:name
+    // //   },
+    // // });
 
-    console.log(obj);
+    // let obj = {
+    //   boardName: prevData.board,
+    //   className: prevData.class,
+    //   mediumName: prevData.medium,
+    //   subjectName: name,
+    // };
+
+    // console.log(obj);
+  
   };
 
   const handleDelete = (name) => {
@@ -192,7 +210,9 @@ export default function TopicPage() {
   const getTopicList = () => {
     axios.post(Helpers().api + "/list_topic_api",prevRef.current).then(res => {
       let data = res.data
-      console.log(data);
+      
+      setTopicList(data.message.unitTopics)
+      console.log(topicListRef.current);
     })
   }
 
@@ -258,20 +278,88 @@ export default function TopicPage() {
 
                 <TableBody>
                   {(rowsPerPage > 0
-                    ? topicList.slice(
+                    ? topicListRef.current.slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
-                    : topicList
+                    : topicListRef.current
                   ).map((row) => (
                     <StyledTableRow>
                       <StyledTableCell>
                         <Typography className={classes.tableContentSize}>
-                          {row}
+                          {row.topicName}
                         </Typography>
                       </StyledTableCell>
 
                       <StyledTableCell
+                        align="center"
+                        className={classes.tableContentSize}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Card
+                            elevation="3"
+                            style={{ display: "flex", padding: "0.5%" }}
+                          >
+                      
+                      <Button
+                              startIcon={<ViewIcon />}
+                              variant="contained"
+                              style={{
+                                backgroundColor: "green",
+                                color: "white",
+                                marginLeft: "5px",
+                                marginRight: "5px",
+                              }}
+                              onClick={() => handleView(row)}
+                            >
+                              View
+                            </Button>
+
+
+                            <Divider orientation="vertical" flexItem />
+
+
+                            <Button
+                              startIcon={<EditIcon />}
+                              variant="contained"
+                              style={{
+                                backgroundColor: "orange",
+                                color: "white",
+                                marginLeft: "5px",
+                                marginRight: "5px",
+                              }}
+                              // onClick={() => handleDelete(row)}
+                            >
+                              Edit
+                            </Button>
+
+                            <Divider orientation="vertical" flexItem />
+
+
+                            <Button
+                              startIcon={<DeleteIcon />}
+                              variant="contained"
+                              style={{
+                                backgroundColor: "red",
+                                color: "white",
+                                marginLeft: "5px",
+                                marginRight: "5px",
+                              }}
+                              onClick={() => handleDelete(row)}
+                            >
+                              Delete
+                            </Button>
+                          </Card>
+                        </div>
+                      </StyledTableCell>
+
+                      {/* <StyledTableCell
                         align="center"
                         className={classes.tableContentSize}
                       >
@@ -343,7 +431,7 @@ export default function TopicPage() {
                             </Button>
                           </Card>
                         </div>
-                      </StyledTableCell>
+                      </StyledTableCell> */}
                     </StyledTableRow>
                   ))}
                   {emptyRows > 0 && (
@@ -366,7 +454,7 @@ export default function TopicPage() {
                       { label: "All", value: -1 },
                     ]}
                     colSpan={3}
-                    count={topicList.length}
+                    count={topicListRef.current.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     SelectProps={{
@@ -403,7 +491,7 @@ export default function TopicPage() {
 
         <DialogContent>
           <div className={classes.dialogBox}>
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex" , justifyContent:'center' ,alignItems:'center' }}>
               <Typography
                 style={{
                   margin: "2%",
@@ -421,11 +509,31 @@ export default function TopicPage() {
                 style={{ margin: "2%" }}
                 variant="outlined"
                 placeholder="Enter Topic Name"
-                value={topicDetails}
+                value={topicDetails.topicName}
                 onChange={handleTopicName}
               />
             </div>
-            
+            <div style={{ display: "flex" , justifyContent:'center' ,alignItems:'center' }}>
+              <Typography
+                style={{
+                  margin: "2%",
+                  fontSize: "20px",
+                  whiteSpace: "nowrap",
+                  textAlign: "center",
+                }}
+              >
+                Topic Url
+              </Typography>
+              <TextField
+                type="url"
+                fullWidth
+                style={{ margin: "2%" }}
+                variant="outlined"
+                placeholder="Enter Topic Url"
+                value={topicDetails.topicUrl}
+                onChange={handleTopicUrl}
+              />
+            </div>
             <Button
               variant="contained"
               style={{

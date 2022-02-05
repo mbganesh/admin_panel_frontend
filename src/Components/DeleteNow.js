@@ -1,63 +1,61 @@
-import { AppBar, Button, TextField, Toolbar, Typography } from "@mui/material";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Card, Typography, Button, TextField, Paper } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Helpers from "../Helpers";
 import useStateRef from "react-usestateref";
 
 export default function DeleteNow() {
-  const [myList, setMyList] = useState([]);
+ 
+  const [myList , setMyList , myListRef] =  useStateRef([])
 
-  const [myText, setMyText, myTextRef] = useStateRef("");
+  const [myObject , setMyObject , myObjectRef] =  useStateRef({
+    num:'',
+    text:''
+  })
 
-  const [myBool, setMyBool] = useState(false);
+
+  const handleNum = (e) => {
+    let str = e.target.value
+    setMyObject({...myObject , num:str})    // num:str ==> let x = "ass"
+  }
 
   const handleText = (e) => {
-    let text = e.target.value;
-    setMyText(text);
-    console.log(myTextRef.current);
-    // const findName = myList.filter(el => el.first_name === myTextRef.current)
+    let str = e.target.value
+    setMyObject({...myObject , text:str})
+  }
 
-    const findName = myList.some(
-      (listData) => listData.first_name === myTextRef.current
-    );
+  const handleSave = () => {
+    setMyList([...myList ,myObject])
+    setMyObject({ num:'',
+    text:''})
+    console.log(myListRef.current);
+  }
 
-    findName ? setMyBool(true) : setMyBool(false);
-
-    // if(findName.length === 0){
-    //     setMyBool(false)
-    // }else{
-    //     setMyBool(true)
-    // }
-  };
-
-  useEffect(() => {
-    axios.get("https://reqres.in/api/users?page=2").then((res) => {
-      let myData = res.data["data"];
-      console.log(myData);
-      setMyList(myData);
-    });
-  }, []);
 
   return (
-  <div>
-      <AppBar position="static">
-          <Toolbar>
-              <Typography variant="h5" > System Task </Typography>
-          </Toolbar>
-      </AppBar>
-  </div>
+ 
+      <div>
+        <h1>Test</h1>
+
+        <TextField label="Num" value={myObject.num} onChange={handleNum} />
+        <br/>
+        <TextField label="Text" value={myObject.text} onChange={handleText} />
+        <br/>
+        <Button variant="contained" color="primary" onClick={() => handleSave()}> Save</Button>
+
+        <div>
+          {
+            myListRef.current.map(data => (
+              <Card style={{margin:'10px' , width:'250px' , backgroundColor:'orange'}}>
+                <h3> {data.num} </h3>
+                <h4> {data.text} </h4>
+              </Card>
+            ))
+          }
+        </div>
+      </div>
+ 
   );
-}
-
-{
-  /* <TextField label="First Name" value={myText} onChange={handleText} />
-
-    <div>
-    
-    {
-        myBool ? 
-        <h1>True</h1> :
-        <h1> False </h1>
-    }
-    
-    </div> */
 }

@@ -1,132 +1,135 @@
 import {
-    AppBar,
-    Button,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Paper,
-    Card,
-    Divider,
-    Table,
-    TableBody,
-    TableContainer,
-    TableFooter,
-    TableCell,
-    TableHead,
-    TablePagination,
-    TableRow,
-    TextField,
-    tableCellClasses,
-    Toolbar,
-    Typography,
-  } from "@mui/material";
-  import React, { useEffect, useState } from "react";
-  import { useLocation } from "react-router-dom";
-  import Helpers from "../Helpers";
-  import { styled } from "@mui/material/styles";
-  import { makeStyles } from "@mui/styles";
-  import { useNavigate } from "react-router-dom";
+  AppBar,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Paper,
+  Card,
+  Divider,
+  Table,
+  TableBody,
+  TableContainer,
+  TableFooter,
+  TableCell,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TextField,
+  tableCellClasses,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import Helpers from "../Helpers";
+import { styled } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import useStateRef from "react-usestateref";
 
-  const useStyles = makeStyles({
-    appBarField: {
-      flex: 1,
-      fontSize: 28,
-    },
-    subContainer2: {
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      paddingLeft: "1%",
-      paddingRight: "1%",
-      margin: "1%",
-    },
-    headFontSize: {
-      color: "white",
-      fontWeight: "500",
-      fontSize: 14,
-      // [theme.breakpoints.up("xl")]: {
-      //   fontSize: 16,
-      // },
-    },
-    tableContentSize: {
-      marginLeft: "1%",
-      fontSize: 14,
-      width: "10vw",
-      // [theme.breakpoints.up("lg")]: {
-      //   fontSize: 16,
-      // },
-    },
-    dialogBox: {
-      width: "550px",
-      padding: "2%",
-      display: "flex",
-      flexDirection: "column",
-      // [theme.breakpoints.down("sm")]: {
-      //   width: "90%",
-      // },
-      // [theme.breakpoints.down("md")]: {
-      //   width: "80%",
-      // },
-    },
-  });
-  
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: Helpers().primaryColor,
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  }));
-  
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-      border: 0,
-    },
-  }));
-  
+const useStyles = makeStyles({
+  appBarField: {
+    flex: 1,
+    fontSize: 28,
+  },
+  subContainer2: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    paddingLeft: "1%",
+    paddingRight: "1%",
+    margin: "1%",
+  },
+  headFontSize: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 14,
+    // [theme.breakpoints.up("xl")]: {
+    //   fontSize: 16,
+    // },
+  },
+  tableContentSize: {
+    marginLeft: "1%",
+    fontSize: 14,
+    width: "10vw",
+    // [theme.breakpoints.up("lg")]: {
+    //   fontSize: 16,
+    // },
+  },
+  dialogBox: {
+    width: "550px",
+    padding: "2%",
+    display: "flex",
+    flexDirection: "column",
+    // [theme.breakpoints.down("sm")]: {
+    //   width: "90%",
+    // },
+    // [theme.breakpoints.down("md")]: {
+    //   width: "80%",
+    // },
+  },
+});
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: Helpers().primaryColor,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
 export default function OneMark() {
+  const classes = useStyles();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [subName, setSubName] = useState("");
 
-    const classes = useStyles();
-    const location = useLocation();
-    const navigate = useNavigate();
-    const [subName, setSubName] = useState("");
-
-    const [oneMarkDetails, setOneMarkDetails] = useState({
-        question: "",
-        option1: "",
-        option2: "",
-        option3: "",
-        option4: "",
-        answer: ""
-      });
-
-      const [oneMarkList, setOneMarkList] = useState([]);
-
-      
-  const [open, setOpen] = useState(false);
-
-  const handleAddOneMarktDialog = () => {
-    setOpen(!open);
-    setOneMarkDetails({ question: "",
+  const [oneMarkDetails, setOneMarkDetails] = useState({
+    question: "",
     option1: "",
     option2: "",
     option3: "",
     option4: "",
-    answer: "" });
+    answer: "",
+  });
+
+  const [oneMarkList, setOneMarkList] = useState([]);
+
+  const [prevData, setPrevData, prevRef] = useStateRef({});
+
+  const [open, setOpen] = useState(false);
+
+  const handleAddOneMarktDialog = () => {
+    setOpen(!open);
+    setOneMarkDetails({
+      question: "",
+      option1: "",
+      option2: "",
+      option3: "",
+      option4: "",
+      answer: "",
+    });
   };
-    
-  
+
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, oneMarkList.length - page * rowsPerPage);
+    rowsPerPage -
+    Math.min(rowsPerPage, oneMarkList.length - page * rowsPerPage);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -166,26 +169,40 @@ export default function OneMark() {
     setOneMarkDetails({ ...oneMarkDetails, option4: text });
   };
 
+  const handleSaveOneMark = () => {
 
-  const handleSaveOneMark = () =>  {
+    let obj = prevRef.current
+    obj['unitOneMarks'] = oneMarkDetails
+
+
+    console.log(obj);
+
+    axios.post(Helpers().api + '/list_one_edit_mark_api' , obj).then(result => {
+      let res = result.data
+      console.log(res);
+    })
+
     setOneMarkList([...oneMarkList, oneMarkDetails]);
     setOpen(!open);
-  }
+  };
 
-
-  
   useEffect(() => {
-    // console.log(location.state);
-    // setSubName(location.state.subName);
-  }, []);
+    let obj = location.state;
+    setPrevData(obj)
+      console.log(prevRef.current);
 
+    axios.post(Helpers().api + "/list_one_mark_api", obj).then((result) => {
+      let res = result.data;
+      console.log(res);
+    });
+  }, []);
 
   return (
     <div>
-       <AppBar position="static">
+      <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" style={{ flex: 1 }}>
-            {subName} - One Mark Handler
+            One Mark Page
           </Typography>
           <Button
             variant="outlined"
@@ -208,7 +225,6 @@ export default function OneMark() {
         </Toolbar>
       </AppBar>
 
-
       <div className={classes.subContainer2}>
         <div style={{ width: "100%", flex: 1, paddingTop: "0%" }}>
           <Card elevation={5}>
@@ -218,37 +234,37 @@ export default function OneMark() {
                   <StyledTableRow>
                     <StyledTableCell align="left">
                       <Typography className={classes.headFontSize}>
-                       Question
+                        Question
                       </Typography>
                     </StyledTableCell>
 
                     <StyledTableCell align="left">
                       <Typography className={classes.headFontSize}>
-                       Option 1
+                        Option 1
                       </Typography>
                     </StyledTableCell>
 
                     <StyledTableCell align="left">
                       <Typography className={classes.headFontSize}>
-                       Option 2
+                        Option 2
                       </Typography>
                     </StyledTableCell>
 
                     <StyledTableCell align="left">
                       <Typography className={classes.headFontSize}>
-                       Option 3
+                        Option 3
                       </Typography>
                     </StyledTableCell>
 
                     <StyledTableCell align="left">
                       <Typography className={classes.headFontSize}>
-                       Option 4
+                        Option 4
                       </Typography>
                     </StyledTableCell>
 
                     <StyledTableCell align="left">
                       <Typography className={classes.headFontSize}>
-                      Answer
+                        Answer
                       </Typography>
                     </StyledTableCell>
 
@@ -328,7 +344,7 @@ export default function OneMark() {
                                 margin: "5px",
                                 color: "white",
                               }}
-                            //   onClick={() => handleView(row)}
+                              //   onClick={() => handleView(row)}
                             >
                               View
                             </Button>
@@ -353,7 +369,7 @@ export default function OneMark() {
                                 color: "white",
                                 margin: "5px",
                               }}
-                            //   onClick={() => handleDelete(row)}
+                              //   onClick={() => handleDelete(row)}
                             >
                               Delete
                             </Button>
@@ -484,7 +500,6 @@ export default function OneMark() {
                 onChange={handleOption2}
               />
             </div>
-            
 
             <div style={{ display: "flex" }}>
               <Typography
@@ -507,7 +522,6 @@ export default function OneMark() {
                 onChange={handleOption3}
               />
             </div>
-            
 
             <div style={{ display: "flex" }}>
               <Typography
@@ -552,8 +566,6 @@ export default function OneMark() {
                 onChange={handleAnswer}
               />
             </div>
-            
-            
 
             <Button
               variant="contained"
@@ -570,8 +582,6 @@ export default function OneMark() {
           </div>
         </DialogContent>
       </Dialog>
-
-
     </div>
   );
 }
