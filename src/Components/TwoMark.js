@@ -20,12 +20,14 @@ import {
     Toolbar,
     Typography,
   } from "@mui/material";
-  import React, { useEffect, useState } from "react";
+  import React, { useEffect, useRef, useState } from "react";
   import { useLocation } from "react-router-dom";
   import Helpers from "../Helpers";
   import { styled } from "@mui/material/styles";
   import { makeStyles } from "@mui/styles";
   import { useNavigate } from "react-router-dom";
+import useStateRef from "react-usestateref";
+import axios from "axios";
 
   
 const useStyles = makeStyles({
@@ -95,8 +97,9 @@ export default function TwoMark() {
     const classes = useStyles();
     const location = useLocation();
     const navigate = useNavigate();
-    const [subName, setSubName] = useState("");
-
+    
+  const [prevData, setPrevData , prevRef] = useStateRef({})
+    
     const [twoMark, setTwoMark] = useState({
         question: "",
         answer: "",
@@ -139,6 +142,15 @@ export default function TwoMark() {
 
   const handleSaveQuestion = () => {
     if (twoMark.answer !== "" || twoMark.question !== "") {
+
+      let obj = prevRef.current
+      obj['unitTwoMarks'] = twoMark
+
+        axios.post(Helpers().api + '/list_edit_two_mark_api' , obj).then(result => {
+          let res = result.data
+          getList()
+        })
+
         setTwoMarkList([...twoMarkList, twoMark]);
         setOpen(!open);
       } else if (twoMark.answer === "") {
@@ -148,9 +160,18 @@ export default function TwoMark() {
       }
   }
 
+  const getList = () => {
+    let obj = prevRef.current
+      axios.post(Helpers().api + '/list_two_mark_api' , obj).then(result => {
+        let res = result.data.message
+        setTwoMarkList(res)
+      })
+  }
 
     useEffect(() => {
-        // console.log(location.state);
+      setPrevData(location.state)
+      getList();
+        console.log(prevRef.current);
         // setSubName(location.state.subName);
       }, []);
 
@@ -158,7 +179,7 @@ export default function TwoMark() {
   return (<div>
       <AppBar position='static'>
           <Toolbar>
-              <Typography style={{flex:1}} > {subName} - Two Mark handler </Typography>
+              <Typography style={{flex:1 , color:'white', fontSize:'22px'}} > Two Mark handler </Typography>
               
               <Button
             variant="outlined"

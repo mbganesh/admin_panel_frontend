@@ -187,16 +187,27 @@ const handleOneMark = (name) => {
     },
   }
 
-  console.log(ob);
-
+  
 
   navigate('/onemarks' , { state :ob })
   // alert('not yet developed')
 }
 
 const handleTwoMark = (name) => {
-  // navigate('/twomarks' , { state : {subName : name} })
-  alert('not yet developed')
+
+
+  let ob = {
+    collectionName:colNameRef.current+ prevRef.current['subjectName'],
+    unitDetails:{
+      unitName:name.unitName,
+      unitNo:name.unitNo
+    },
+  }
+
+  console.log(ob);
+
+  navigate('/twomarks' , { state :ob })
+  // alert('not yet developed')
 }
 
 const handleDelete = (name) => {
