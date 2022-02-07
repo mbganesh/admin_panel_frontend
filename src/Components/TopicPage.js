@@ -58,7 +58,7 @@ const useStyles = makeStyles({
   tableContentSize: {
     marginLeft: "1%",
     fontSize: 14,
-    width: "48vw",
+    width: "33vw",
     // [theme.breakpoints.up("lg")]: {
     //   fontSize: 16,
     // },
@@ -133,10 +133,7 @@ export default function TopicPage() {
 
   const handleAddTopic = () => {
 
-   
-
     if (topicDetails !== "") {
-        // prevRef.current['topicName'] = topicDetails
 
         let obj = {
           collectionName:prevRef.current.collectionName,
@@ -149,7 +146,7 @@ export default function TopicPage() {
     
         console.log(obj);
     
-        axios.post(Helpers().api + '/list_topic_edit_api' , obj ).then(result => {
+        axios.post(Helpers().api + '/topic_add_api' , obj ).then(result => {
           let res = result.data
           console.log(res);
           getTopicList() 
@@ -181,30 +178,49 @@ export default function TopicPage() {
 
     setOpen(!open)
 
-    // // navigate("/topicpage", {
-    // //   // board: 'State Board', medium: 'English Medium', class: 'class1th'
-    // //   state: {
-    // //     boardName: prevData.board,
-    // //     className: prevData.class,
-    // //     mediumName: prevData.medium,
-    // //     subjectName:name
-    // //   },
-    // // });
-
-    // let obj = {
-    //   boardName: prevData.board,
-    //   className: prevData.class,
-    //   mediumName: prevData.medium,
-    //   subjectName: name,
-    // };
-
-    // console.log(obj);
-  
   };
 
+  const handleEdit = (name) => {
+    setOpen(!open)
+    setTopicDetails(name)
+
+    let obj = {
+      collectionName:prevRef.current.collectionName,
+      unitDetail:{
+        unitName:prevRef.current.unitName.unitName,
+        unitNo:prevRef.current.unitName.unitNo,
+      },
+      topicDetails:name
+    }
+
+  //   const newState = topicListRef.current.map(obj =>
+  //     obj.topicName === name.topicName ? { ...obj, topicName: topicDetails.topicName , topicUrl:topicDetails.topicUrl } : obj  );
+  // setTopicList(newState)
+  
+    
+
+    // axios.post(Helpers().api + '/topic_edit_api' , obj ).then(result => {
+    //   let res = result.data
+    //   console.log(res);
+    //   getTopicList() 
+    // })
+
+  }
+
   const handleDelete = (name) => {
-    const newList = topicList.filter((oldData) => oldData !== name);
-    setTopicList(newList);
+    let obj = {
+      collectionName:prevRef.current.collectionName,
+      unitDetail:{
+        unitName:prevRef.current.unitName.unitName,
+        unitNo:prevRef.current.unitName.unitNo,
+      },
+      topicDetails:name
+    }
+    axios.post(Helpers().api + '/topic_delete_api' , obj ).then(result => {
+      let res = result.data
+      console.log(res);
+      getTopicList() 
+    })
   };
 
   const getTopicList = () => {
@@ -268,6 +284,11 @@ export default function TopicPage() {
                         Topic Name
                       </Typography>
                     </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <Typography className={classes.headFontSize}>
+                        Topic Url
+                      </Typography>
+                    </StyledTableCell>
                     <StyledTableCell align="center">
                       <Typography className={classes.headFontSize}>
                         Actions
@@ -288,6 +309,12 @@ export default function TopicPage() {
                       <StyledTableCell>
                         <Typography className={classes.tableContentSize}>
                           {row.topicName}
+                        </Typography>
+                      </StyledTableCell>
+
+                      <StyledTableCell>
+                        <Typography className={classes.tableContentSize}>
+                          {row.topicUrl}
                         </Typography>
                       </StyledTableCell>
 
@@ -334,7 +361,7 @@ export default function TopicPage() {
                                 marginLeft: "5px",
                                 marginRight: "5px",
                               }}
-                              // onClick={() => handleDelete(row)}
+                              onClick={() => handleEdit(row)}
                             >
                               Edit
                             </Button>
@@ -358,80 +385,6 @@ export default function TopicPage() {
                           </Card>
                         </div>
                       </StyledTableCell>
-
-                      {/* <StyledTableCell
-                        align="center"
-                        className={classes.tableContentSize}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <Card
-                            elevation="3"
-                            style={{ display: "flex", padding: "0.5%" }}
-                          >
-                            <Button
-                              startIcon={<VideoIcon />}
-                              variant="contained"
-                              onClick={() => handleVideo(row)}
-                              style={{
-                                backgroundColor: "#041562",
-                                marginLeft: "5px",
-                                marginRight: "5px",
-                                color: "white",
-                              }}
-                            >
-                              Videos
-                            </Button>
-                            <Divider orientation="vertical" flexItem />
-                            <Button
-                              startIcon={<MarkIcon />}
-                              variant="contained"
-                              onClick={() => handleOneMark(row)}
-                              style={{
-                                backgroundColor: "#519259",
-                                marginLeft: "5px",
-                                marginRight: "5px",
-                                color: "white",
-                              }}
-                            >
-                              One Mark
-                            </Button>
-                            <Divider orientation="vertical" flexItem />
-                            <Button
-                              startIcon={<MarkIcon />}
-                              variant="contained"
-                              style={{
-                                backgroundColor: "#519259",
-                                color: "white",
-                                marginLeft: "5px",
-                                marginRight: "5px",
-                              }}
-                              onClick={() => handleTwoMark(row)}
-                            >
-                              Two Mark
-                            </Button>
-                            <Divider orientation="vertical" flexItem />
-                            <Button
-                              startIcon={<DeleteIcon />}
-                              variant="contained"
-                              style={{
-                                backgroundColor: "red",
-                                color: "white",
-                                marginLeft: "5px",
-                                marginRight: "5px",
-                              }}
-                              onClick={() => handleDelete(row)}
-                            >
-                              Delete
-                            </Button>
-                          </Card>
-                        </div>
-                      </StyledTableCell> */}
                     </StyledTableRow>
                   ))}
                   {emptyRows > 0 && (

@@ -363,7 +363,7 @@ export default function TwoMark() {
           }}
           id="form-dialog-title"
         >
-          Add Videos
+          Add Two Mark
         </DialogTitle>
 
         <DialogContent>
@@ -383,6 +383,7 @@ export default function TwoMark() {
                 type="text"
                 maxRows={4}
                 multiline
+                rows={4}
                 autoFocus
                 fullWidth
                 style={{ margin: "2%" }}
@@ -406,6 +407,7 @@ export default function TwoMark() {
               <TextField
                 type="text"
                 fullWidth
+                rows={4}
                 maxRows={4}
                 multiline
                 style={{ margin: "2%" }}

@@ -434,7 +434,7 @@ export default function OneMark() {
           }}
           id="form-dialog-title"
         >
-          Add Two Marks
+          Add One Mark
         </DialogTitle>
 
         <DialogContent>
@@ -453,6 +453,9 @@ export default function OneMark() {
               <TextField
                 type="text"
                 autoFocus
+                multiline
+                rows={3}
+                maxRows={3}
                 fullWidth
                 style={{ margin: "2%" }}
                 variant="outlined"

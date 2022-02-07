@@ -44,7 +44,6 @@ function BoardSelection() {
       class: "class"+refclass.current,
     };
 
-
     if(data.medium === ''){
       let filledData = {
         board: ref.current,

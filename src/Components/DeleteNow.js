@@ -8,53 +8,26 @@ import useStateRef from "react-usestateref";
 
 export default function DeleteNow() {
  
-  const [myList , setMyList , myListRef] =  useStateRef([])
-
-  const [myObject , setMyObject , myObjectRef] =  useStateRef({
-    num:'',
-    text:''
-  })
-
-
-  const handleNum = (e) => {
-    let str = e.target.value
-    setMyObject({...myObject , num:str})    // num:str ==> let x = "ass"
-  }
 
   const handleText = (e) => {
-    let str = e.target.value
-    setMyObject({...myObject , text:str})
-  }
+    console.log(e.key);
 
-  const handleSave = () => {
-    setMyList([...myList ,myObject])
-    setMyObject({ num:'',
-    text:''})
-    console.log(myListRef.current);
+    if(e.key === 'y' || e.key === 'Y'){
+      alert('Yes!')
+    }else if(e.key === 'n' || e.key === 'N'){
+      alert('No?')
+    }else if(e.key === 'Enter'){
+      alert('Enter*')
+    }
+    
   }
-
 
   return (
  
       <div>
-        <h1>Test</h1>
-
-        <TextField label="Num" value={myObject.num} onChange={handleNum} />
-        <br/>
-        <TextField label="Text" value={myObject.text} onChange={handleText} />
-        <br/>
-        <Button variant="contained" color="primary" onClick={() => handleSave()}> Save</Button>
-
-        <div>
-          {
-            myListRef.current.map(data => (
-              <Card style={{margin:'10px' , width:'250px' , backgroundColor:'orange'}}>
-                <h3> {data.num} </h3>
-                <h4> {data.text} </h4>
-              </Card>
-            ))
-          }
-        </div>
+       <h5>Press :</h5>
+       <small> Y for Yes or N for No</small>
+       <TextField onKeyPress={handleText} />
       </div>
  
   );

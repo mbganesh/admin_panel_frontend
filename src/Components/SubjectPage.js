@@ -15,7 +15,6 @@ import {
   tableCellClasses,
   Toolbar,
   Typography,
-  IconButton,
   Dialog,
   TextField,
   DialogContent,
@@ -101,7 +100,7 @@ export default function SubjectPage() {
   const navigate = useNavigate();
 
   const location = useLocation();
-
+  const [collectionName, setCollectionName, colNameRef] = useStateRef('');
   const [subjectList, setSubjectList] = useState([]);
   const [subjectName, setSubjectName] = useState("");
 
@@ -171,27 +170,44 @@ export default function SubjectPage() {
   };
 
   const handleDelete = (name) => {
-    // const newList = myList.filter((oldData) => oldData !== name);
+    
+    let prevClassName =prevRef.current.class
+  setCollectionName(getBoardName(prevRef.current.board) + getBoardName(prevRef.current.medium) + prevClassName.charAt(0).toUpperCase()+prevClassName.slice(1)+name)
 
-    let TempObj = {
+
+
+    let objForSubList = {
       subDetails: prevRef.current,
       subName: name,
     };
 
-    axios.post(Helpers().api + "/subject_edit_api", TempObj).then((res) => {
+
+    axios.post(Helpers().api + "/subject_edit_api", objForSubList).then((res) => {
+      let upData = res.data;
+      console.log(upData);
+      dropSubCol()
+    });
+  };
+
+  const dropSubCol = () => {
+    let objForSubDrop = {
+      collectionName: colNameRef.current,
+    };
+
+    axios.post(Helpers().api + "/drop_subject_api", objForSubDrop).then((res) => {
       let upData = res.data;
       console.log(upData);
       getSubList();
     });
-  };
+  }
 
   const handleSubjectPage = () => {
     setOpen(!open);
     setSubjectName("");
   };
 
-  const getBoardName = (key) => {
-    let boardArr = prevRef.current[key].split(" ");
+  const getBoardName = (key) => { 
+    let boardArr =key.split(" ");
     let b = boardArr.map((el) => el.charAt(0));
     let BOARD = "";
     for (let i = 0; i < b.length; i++) {
@@ -242,7 +258,7 @@ export default function SubjectPage() {
             style={{ color:'white', marginRight:'20px'}}
           >
            Change Class
-          </Button>
+          </Button> 
 
           <Button
             variant="contained"
