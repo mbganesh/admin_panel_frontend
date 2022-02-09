@@ -186,6 +186,20 @@ export default function OneMark() {
     setOpen(!open);
   };
 
+  const handleDelete = (name) => {
+    let obj = {
+      collectionName:prevRef.current.collectionName,
+      unitDetail:prevRef.current.unitDetails,
+      oneMarkDetails:name
+    }
+
+    axios.post(Helpers().api + '/one_mark_delete_api' , obj ).then(result => {
+      let res = result.data
+      console.log(res);
+      getList() 
+    })
+  };
+
   const getList = () => {
     axios.post(Helpers().api + "/list_one_mark_api", prevRef.current).then((result) => {
       let res = result.data.message;
@@ -373,7 +387,7 @@ export default function OneMark() {
                                 color: "white",
                                 margin: "5px",
                               }}
-                              //   onClick={() => handleDelete(row)}
+                                onClick={() => handleDelete(row)}
                             >
                               Delete
                             </Button>

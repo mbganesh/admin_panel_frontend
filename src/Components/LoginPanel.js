@@ -5,6 +5,24 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Helpers from "../Helpers";
 
+const myRootCard = (theme) => ({
+  display: "flex",
+  flexDirection: "column",
+  padding: "20px",
+  marginTop: "50%",
+  [theme.breakpoints.down("md")]: {
+    width:'75vw',
+    backgroundColor: "red",
+  },
+  [theme.breakpoints.up("md")]: {
+
+    backgroundColor: "green"  ,
+  },
+  [theme.breakpoints.up("lg")]: {
+    backgroundColor: "orange",
+  },
+});
+
 export default function LoginPanel() {
   const [loginData, setLoginData] = useState({
     userName: "",
@@ -41,130 +59,131 @@ export default function LoginPanel() {
   const navigate = useNavigate();
   return (
     <div>
-    <div class="header">
-      <div class="inner-header flex">
-        <h1>GilGal Admin Panel</h1>
+      <div class="header">
+        <div class="inner-header flex">
+          <h1>GilGal Admin Panel</h1>
+        </div>
+
+        <div>
+          <div>
+            <svg
+              class="waves"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlnsXlink="http://www.w3.org/1999/xlink"
+              viewBox="0 24 150 28"
+              preserveAspectRatio="none"
+              shape-rendering="auto"
+            >
+              <defs>
+                <path
+                  id="gentle-wave"
+                  d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"
+                />
+              </defs>
+              <g class="parallax">
+                <use
+                  xlinkHref="#gentle-wave"
+                  x="48"
+                  y="0"
+                  fill="rgba(255,255,255,0.7"
+                />
+                <use
+                  xlinkHref="#gentle-wave"
+                  x="48"
+                  y="3"
+                  fill="rgba(255,255,255,0.5)"
+                />
+                <use
+                  xlinkHref="#gentle-wave"
+                  x="48"
+                  y="5"
+                  fill="rgba(255,255,255,0.3)"
+                />
+                <use xlinkHref="#gentle-wave" x="48" y="7" fill="#fff" />
+              </g>
+            </svg>
+          </div>
+        </div>
       </div>
 
-      <div>
+      <div class="content flex">
         <div>
-          <svg
-            class="waves"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            viewBox="0 24 150 28"
-            preserveAspectRatio="none"
-            shape-rendering="auto"
-          >
-            <defs>
-              <path
-                id="gentle-wave"
-                d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"
+          <Card elevation={10} sx={myRootCard} >
+            <div
+              style={{
+                width: "30vw",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                margin: "25px",
+              }}
+            >
+              <Typography
+                style={{ margin: "10px", fontWeight: "900", fontSize: 16 }}
+              >
+                Username
+              </Typography>
+              <TextField
+                id="outlined-basic"
+                size="small"
+                variant="filled"
+                fullWidth
+                value={loginData.userName}
+                onChange={(e) => handleUserName(e)}
               />
-            </defs>
-            <g class="parallax">
-              <use
-                xlinkHref="#gentle-wave"
-                x="48"
-                y="0"
-                fill="rgba(255,255,255,0.7"
+            </div>
+
+            <div
+              style={{
+                width: "30vw",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                margin: "25px",
+              }}
+            >
+              <Typography
+                style={{ margin: "10px", fontWeight: "900", fontSize: 16 }}
+              >
+                Password
+              </Typography>
+              <TextField
+                id="outlined-basic"
+                size="small"
+                type="password"
+                fullWidth
+                variant="filled"
+                value={loginData.passWord}
+                onChange={(e) => handlePassWord(e)}
               />
-              <use
-                xlinkHref="#gentle-wave"
-                x="48"
-                y="3"
-                fill="rgba(255,255,255,0.5)"
-              />
-              <use
-                xlinkHref="#gentle-wave"
-                x="48"
-                y="5"
-                fill="rgba(255,255,255,0.3)"
-              />
-              <use xlinkHref="#gentle-wave" x="48" y="7" fill="#fff" />
-            </g>
-          </svg>
+            </div>
+
+            <div
+              style={{
+                width: "30vw",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                margin: "25px",
+              }}
+            >
+              <Button
+                style={{
+                  width: "100%",
+                  backgroundColor: "#1C6DD0",
+                  height: "45px",
+                  color: "white",
+                  fontWeight: "900",
+                  fontSize: 18,
+                }}
+                onClick={() => handleLoginBtn()}
+              >
+                Login
+              </Button>
+            </div>
+          </Card>
         </div>
       </div>
     </div>
-
-    <div class="content flex">
-      <div>
-        <Card
-          elevation={10}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            padding:'20px',
-            marginTop:'50%'
-          }}
-        >
-          <div style={{
-            width:'30vw',
-            display:'flex',
-            justifyContent:'center',
-            alignItems:'center',
-            margin:'25px'
-          }}>
-            <Typography style={{margin:'10px', fontWeight: "900", fontSize: 16 }}>
-              Username
-            </Typography>
-            <TextField
-              id="outlined-basic"
-              size="small"
-              variant="filled"
-              fullWidth
-              value={loginData.userName}
-              onChange={(e) => handleUserName(e)}
-            />
-          </div>
-
-          <div style={{
-            width:'30vw',
-            display:'flex',
-            justifyContent:'center',
-            alignItems:'center',
-            margin:'25px'
-            
-          }}>
-            <Typography style={{margin:'10px', fontWeight: "900", fontSize: 16 }}>
-              Password
-            </Typography>
-            <TextField
-              id="outlined-basic"
-              size="small"
-              type="password"
-              fullWidth
-              variant="filled"
-              value={loginData.passWord}
-              onChange={(e) => handlePassWord(e)}
-            />
-          </div>
-
-          <div style={{
-            width:'30vw',
-            display:'flex',
-            justifyContent:'center',
-            alignItems:'center',
-            margin:'25px'
-          }}>
-            <Button
-              style={{
-                width: "100%",
-                backgroundColor: "#1C6DD0",
-                height: "45px",
-                color: "white",
-                fontWeight: "900",
-                fontSize: 18,
-              }}
-              onClick={() => handleLoginBtn()}
-            >
-              Login
-            </Button>
-          </div>
-        </Card>
-      </div>
-    </div>
-  </div>
   );
 }

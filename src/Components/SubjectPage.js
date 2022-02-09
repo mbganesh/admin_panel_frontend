@@ -174,13 +174,10 @@ export default function SubjectPage() {
     let prevClassName =prevRef.current.class
   setCollectionName(getBoardName(prevRef.current.board) + getBoardName(prevRef.current.medium) + prevClassName.charAt(0).toUpperCase()+prevClassName.slice(1)+name)
 
-
-
     let objForSubList = {
       subDetails: prevRef.current,
       subName: name,
     };
-
 
     axios.post(Helpers().api + "/subject_edit_api", objForSubList).then((res) => {
       let upData = res.data;

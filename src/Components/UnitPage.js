@@ -53,10 +53,18 @@ const useStyles = makeStyles({
     //   fontSize: 16,
     // },
   },
+  tableContentSizeSmall: {
+    marginLeft: "1%",
+    fontSize: 14,
+    width: "5vw",
+    // [theme.breakpoints.up("lg")]: {
+    //   fontSize: 16,
+    // },
+  },
   tableContentSize: {
     marginLeft: "1%",
     fontSize: 14,
-    width: "48vw",
+    width: "30vw",
     // [theme.breakpoints.up("lg")]: {
     //   fontSize: 16,
     // },
@@ -207,7 +215,6 @@ export default function UnitPage() {
   };
 
   const handleDelete = (name) => {
-
     
     let obj = {
       className: prevRef.current["className"],
@@ -225,9 +232,7 @@ export default function UnitPage() {
       // getUnitList()
     });
 
-
-    // const newList = unitList.filter((oldData) => oldData !== name);
-    // setUnitList(newList);
+    
   };
 
   const getBoardName = (key) => {
@@ -326,6 +331,11 @@ export default function UnitPage() {
                   <StyledTableRow>
                     <StyledTableCell align="left">
                       <Typography className={classes.headFontSize}>
+                        Unit No
+                      </Typography>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <Typography className={classes.headFontSize}>
                         Unit Name
                       </Typography>
                     </StyledTableCell>
@@ -345,50 +355,19 @@ export default function UnitPage() {
                       )
                     : unitList
                   ).map((row) => (
-                    <StyledTableRow>
+                    <StyledTableRow key={row.unitNo+row.unitName}>
+
                       <StyledTableCell>
-                        <Typography className={classes.tableContentSize}>
-                          {row.unitNo} {row.unitName}
+                        <Typography className={classes.tableContentSizeSmall}>
+                          {row.unitNo}
                         </Typography>
                       </StyledTableCell>
-                      {/*
-                    <StyledTableCell
-                        align="center"
-                        className={classes.tableContentSize}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <Card
-                            elevation="3"
-                            style={{ display: "flex", padding: "0.5%" }}
-                          >
-                            <IconButton onClick={() => handleView(row)}>
-                              <NextIcon />
-                            </IconButton>
-
-                            <Divider orientation="vertical" flexItem />
-                            <Button
-                              startIcon={<DeleteIcon />}
-                              variant="contained"
-                              style={{
-                                backgroundColor: "red",
-                                color: "white",
-                                marginLeft: "5px",
-                                marginRight: "5px",
-                              }}
-                              onClick={() => handleDelete(row)}
-                            >
-                              Delete
-                            </Button>
-                          </Card>
-                        </div>
+                      <StyledTableCell>
+                        <Typography className={classes.tableContentSize}>
+                          {row.unitName}
+                        </Typography>
                       </StyledTableCell>
-                    */}
+                      
                       <StyledTableCell
                         align="center"
                         className={classes.tableContentSize}
@@ -542,6 +521,7 @@ export default function UnitPage() {
                 placeholder="Enter Unit Number"
                 value={unitDetails.unitNo}
                 onChange={handleUnitNo}
+               
               />
             </div>
             <div style={{ display: "flex" }}>

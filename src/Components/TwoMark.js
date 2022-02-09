@@ -160,6 +160,20 @@ export default function TwoMark() {
       }
   }
 
+  const handleDelete = (name) => {
+    let obj = {
+      collectionName:prevRef.current.collectionName,
+      unitDetail:prevRef.current.unitDetails,
+      twoMarkDetails:name
+    }
+
+    axios.post(Helpers().api + '/two_mark_delete_api' , obj ).then(result => {
+      let res = result.data
+      console.log(res);
+      getList() 
+    })
+  };
+
   const getList = () => {
     let obj = prevRef.current
       axios.post(Helpers().api + '/list_two_mark_api' , obj).then(result => {
@@ -301,7 +315,7 @@ export default function TwoMark() {
                                 color: "white",
                                 margin: "5px",
                               }}
-                            //   onClick={() => handleDelete(row)}
+                              onClick={() => handleDelete(row)}
                             >
                               Delete
                             </Button>

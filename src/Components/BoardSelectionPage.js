@@ -19,12 +19,9 @@ function BoardSelection() {
     medium: ["Tamil Medium", "English Medium"],
 
     class: [
-      "1th",
-      "2th",
-      "3th",
-      "4th",
-      "5th",
-      "6th",
+      "1st",
+      "2nd",
+      "3rd",
       "4th",
       "5th",
       "6th",
